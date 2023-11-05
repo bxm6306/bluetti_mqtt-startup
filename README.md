@@ -3,9 +3,7 @@
 
 ====================
 
-[![license](https://img.shields.io/github/license/ralish/bash-script-template)](https://choosealicense.com/licenses/mit/)
-
-A startup wrapper script that assists with starting Bluetti_mqtt with the Home Assistant service. It has been tested on a Raspberry Pi 3B running Debian GNU/Linux 11 (bullseye).
+A startup wrapper script that assists with starting [bluetti_mqtt](https://github.com/warhammerkid/bluetti_mqtt) with the [Home Assistant](https://github.com/home-assistant/) service. It has been tested on a Raspberry Pi 3B running Debian GNU/Linux 11 (bullseye).
 
 - [Motivation](#motivation)
 - [Files](#files)
@@ -45,5 +43,5 @@ Define the required variables within start_bluetti_mqtt.sh and run it at system 
 
 License
 -------
-
+[![license](https://img.shields.io/github/license/ralish/bash-script-template)](https://choosealicense.com/licenses/mit/)
 All content is licensed under the terms of [The MIT License](LICENSE).
