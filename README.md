@@ -3,7 +3,7 @@
 
 ====================
 
-A startup wrapper script that assists with starting [bluetti_mqtt](https://github.com/warhammerkid/bluetti_mqtt) with the [Home Assistant](https://github.com/home-assistant/) service. It has been tested on a Raspberry Pi 3B running Debian GNU/Linux 11 (bullseye).
+A startup wrapper script that assists with starting [bluetti_mqtt](https://github.com/warhammerkid/bluetti_mqtt) with the [Home Assistant](https://github.com/home-assistant/) service. It has been tested on a Raspberry Pi 3B running Debian GNU/Linux 11 (bullseye) and [Eclipse Mosquitto](https://mosquitto.org/) as the MQTT broker.
 
 - [Motivation](#motivation)
 - [Files](#files)
