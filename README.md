@@ -42,7 +42,7 @@ Define the required variables within start_bluetti_mqtt.sh and run it at system 
 | **station1_description** | Description for Station 1                                                                       | AC200Max          |
 | **station2_description** | Description for Station 2                                                                       | AC300             |
 
-I also re-run this script every hour via crontab which you can edit by running **crontab -e** and adding the following line
+I also re-run this script every hour via crontab which you can edit by running **crontab -e** and adding the following line:
 
 0 * * * * bash /yourpathgoeshere/start_bluetti_mqtt.sh
 
