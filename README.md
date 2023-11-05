@@ -13,7 +13,8 @@ A startup wrapper script that assists with starting [bluetti_mqtt](https://githu
 Motivation
 ----------
 
-I run Bluetti_mqtt with two Bluetti power stations with Home Assistant running on my Raspberry Pi 3B and needed a more reiable way to send Bluetti staton metrics to my Home Assistant service. 
+I run Bluetti_mqtt with two Bluetti power stations with Home Assistant running on my Raspberry Pi 3B and needed a more reiable way to send Bluetti staton metrics to my Home Assistant service when my RPI3 restarts which I do once a day. 
+
 
 Files
 -----
@@ -40,6 +41,10 @@ Define the required variables within start_bluetti_mqtt.sh and run it at system 
 | **station2_mac** | An optional second Bluetti station Bluetooth MAC address for discovery                                  | 01:23:45:67:89:AC |
 | **station1_description** | Description for Station 1                                                                       | AC200Max          |
 | **station2_description** | Description for Station 2                                                                       | AC300             |
+
+I also re-run this script every hour via crontab which you can edit by running **crontab -e** and adding the following line
+
+0 * * * * bash /yourpathgoeshere/start_bluetti_mqtt.sh
 
 License
 -------
