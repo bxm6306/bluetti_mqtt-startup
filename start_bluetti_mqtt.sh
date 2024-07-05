@@ -45,43 +45,65 @@ echo "Restarting Bluetooth service..."
 echo "Waiting for Bluetooth service to finish starting..."
 /bin/sleep 5
 
-echo "Discovering Bluetti stations via Bluetooth..."
-discovery=$(timeout 10 /usr/local/bin/bluetti-discovery --scan)
+try=0
 
-station1_disc=$(echo $discovery | grep -q $station1_mac; echo $?)
-station2_disc=$(echo $discovery | grep -q $station2_mac; echo $?)
+discover() {
+        echo "Discovering Bluetti stations via Bluetooth..."
+        discovery=$(timeout 10 /usr/local/bin/bluetti-discovery --scan)
 
-station1_online=0
-station2_online=0
+        station1_disc=$(echo $discovery | grep -q $station1_mac; echo $?)
+        station2_disc=$(echo $discovery | grep -q $station2_mac; echo $?)
 
-echo "Done with discovery"
+        station1_online=0
+        station2_online=0
 
-if [ $station1_disc -eq 0 ]; then
-        echo "Station 1 ($station1_description) is online!"
-        station1_online=1
-fi
-if [ $station2_disc -eq 0 ]; then
-        echo "Station 2 ($station2_description) is online!"
-        station2_online=1
-fi
+        ((try++))
+
+        echo "Done with discovery"
+}
+
+parse_disc_result() {
+        if [ $station1_disc -eq 0 ]; then
+                echo "$station1_description is online!"
+                station1_online=1
+        fi
+        if [ $station2_disc -eq 0 ]; then
+                echo "$station2_description is online!"
+                station2_online=1
+        fi
+        if [[ $(( $station1_disc + $station2_disc )) -eq 0 ]]; then
+                if [ $try -eq 0 ]; then
+                        echo "No stations discovered. Trying once more..."
+                        discover
+                        parse_disc_result
+                else
+                        echo "No stations discovered after retry. Exiting!"
+                        exit 1
+                fi
+
+        fi
+}
+
+discover
+parse_disc_result
 
 echo "Waiting for Home Assistant [$homeassistant_hostname:$homeassistant_port] to finish starting..."
 
 i=0
 while true; do
-	i=$[$i+1]
-	HA_port_test=$(timeout 2 bash -c "</dev/tcp/$homeassistant_hostname/$homeassistant_port" 2> /dev/null; echo $?)
-	
-	if [ $HA_port_test -eq 0 ]; then
-		#We wait 20 sec after Home Assistant port responds to TCP test for its MQTT service to be able to receive the bluetti-mqtt device discovery message
-		/bin/sleep 20
-		break
-	elif [ $i -lt 30 ]; then
-		/bin/sleep 10
-	else 
-		echo "Exiting script as Home Assistant at $homeassistant_hostname : $homeassistant_port did not come up within 5 minutes"
-		exit 1
-	fi
+        i=$[$i+1]
+        HA_port_test=$(timeout 2 bash -c "</dev/tcp/$homeassistant_hostname/$homeassistant_port" 2> /dev/null; echo $?)
+
+        if [ $HA_port_test -eq 0 ]; then
+                #We wait 20 sec after Home Assistant port responds to TCP test for its MQTT service to be able to receive the bluetti-mqtt device discovery message
+                /bin/sleep 20
+                break
+        elif [ $i -lt 30 ]; then
+                /bin/sleep 10
+        else
+                echo "Exiting script as Home Assistant at $homeassistant_hostname : $homeassistant_port did not come up within 5 minutes"
+                exit 1
+        fi
 done
 
 echo "Starting Bluetti-mqtt..."
