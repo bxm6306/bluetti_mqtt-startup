@@ -71,9 +71,9 @@ parse_disc_result() {
                 echo "$station2_description is online!"
                 station2_online=1
         fi
-        if [[ $(( $station1_disc + $station2_disc )) -eq 0 ]]; then
-                if [ $try -eq 0 ]; then
-                        echo "No stations discovered. Trying once more..."
+        if [[ $(( $station1_disc + $station2_disc )) -eq 2 ]]; then
+                if [ $try -lt 5 ]; then
+                        echo "No stations discovered. Trying once more (up to 5 times)..."
                         discover
                         parse_disc_result
                 else
@@ -116,4 +116,5 @@ elif [ $station2_online == 1 ] && [ $station1_online == 1 ]; then
         /usr/local/bin/bluetti-mqtt --broker $mqtt_broker_hostname --port $mqtt_broker_port --username $bluetti_mqtt_broker_username --password $bluetti_mqtt_broker_password --interval $mqtt_scan_interval $station1_mac $station2_mac &
 fi
 
+echo "Exiting with code 0"
 exit 0
